@@ -64,12 +64,11 @@ class CustomThemeColors {
 
   Color get minus => const Color.fromARGB(255, 9, 125, 219);
 
-  Color get primary => const Color(0xffE65C0B);
-
   // Color get footer => const Color(0xffB6DDE9);
+  static const Color primary = const Color(0xffE65C0B);
+  static const Color contrastPrimary = const Color(0xff48130E);
   static const Color footer =  const Color(0xffB6DDE9);
   static const Color footerText =  const Color(0xff80a3ad);
-
-//#F6E2BF
-//#48130E
+  static const Color logoBackground = const Color(0xffE9E9E7);
+  static const Color basicBackground = const Color(0xffF6E2BF);
 }

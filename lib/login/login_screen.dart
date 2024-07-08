@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
     onPressed: () {},
     height: 48,
     minWidth: double.infinity,
-    color: const CustomThemeColors().primary,
+    color: CustomThemeColors.primary,
     child: const Text("Login", style: TextStyle(color: Colors.white, fontSize: 18,),),
                 ),
               ),

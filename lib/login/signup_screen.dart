@@ -80,7 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   onPressed: () {},
                   height: 48,
                   minWidth: double.infinity,
-                  color: CustomThemeColors().primary,
+                  color: CustomThemeColors.primary,
                   child: Text("Sign Up",
                   style: TextStyle(fontFamily: "DraftingMono",fontWeight: FontWeight.w600),),
                 ),
