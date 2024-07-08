@@ -1,5 +1,5 @@
 <h1 align="center">
-  Bio Product Order App with Dart, Flutter
+  Bio Product Order App with Flutter, Firebase, Riverpod
   <br>
 </h1>
 
