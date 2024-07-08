@@ -1,5 +1,6 @@
 import 'package:e_product_order_flutter/common/theme/custom_colors.dart';
-import 'package:e_product_order_flutter/home/widgets/home_widgets.dart';
+import 'package:e_product_order_flutter/home/widgets/home_widget.dart';
+import 'package:e_product_order_flutter/home/widgets/seller_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.logout),
             onPressed: () {},
           ),
+          if(_menuIndex == 0)
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {},
@@ -35,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _menuIndex,
         children: [
           HomeWidget(),
-          Container(color: Colors.indigo,),
+          SellerWidget(),
         ],
       ),
       floatingActionButton: switch(_menuIndex){
