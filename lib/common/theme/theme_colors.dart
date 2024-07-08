@@ -1,0 +1,75 @@
+import 'package:flutter/material.dart';
+import 'app_colors.dart';
+
+export 'app_colors.dart';
+
+typedef ColorProvider = Color Function();
+
+class CustomThemeColors {
+  const CustomThemeColors();
+
+  Color get seedColor => const Color(0xff26ff8c);
+
+  Color get veryBrightGrey => AppColors.brightGrey;
+
+  Color get drawerBg => const Color.fromARGB(255, 255, 255, 255);
+
+  Color get scrollableItem => const Color.fromARGB(255, 57, 57, 57);
+
+  Color get iconButton => const Color.fromARGB(255, 0, 0, 0);
+
+  Color get iconButtonInactivate => const Color.fromARGB(255, 162, 162, 162);
+
+  Color get inActivate => const Color.fromARGB(255, 200, 207, 220);
+
+  Color get activate => const Color.fromARGB(255, 63, 72, 95);
+
+  Color get badgeBg => AppColors.blueGreen;
+
+  Color get textBadgeText => Colors.white;
+
+  Color get badgeBorder => Colors.transparent;
+
+  Color get divider => const Color.fromARGB(255, 228, 228, 228);
+
+  Color get text => AppColors.darkGrey;
+
+  Color get hintText => AppColors.middleGrey;
+
+  Color get focusedBorder => AppColors.darkGrey;
+
+  Color get confirmText => AppColors.blue;
+
+  Color get drawerText => text;
+
+  Color get snackbarBgColor => AppColors.mediumBlue;
+
+  Color get blueButtonBackground => AppColors.darkBlue;
+
+  Color get appBarBackground => const Color.fromARGB(255, 16, 16, 18);
+
+  Color get buttonBackground => const Color.fromARGB(255, 48, 48, 48);
+
+  Color get roundedLayoutBackground => const Color.fromARGB(255, 24, 24, 24);
+
+  Color get unreadColor => const Color.fromARGB(255, 48, 48, 48);
+
+  Color get lessImportantText => AppColors.grey;
+
+  Color get lessImportant => AppColors.grey;
+
+  Color get bleutext => AppColors.blue;
+
+  Color get plus => const Color.fromARGB(255, 230, 71, 83);
+
+  Color get minus => const Color.fromARGB(255, 9, 125, 219);
+
+  Color get primary => const Color(0xffE65C0B);
+
+  // Color get footer => const Color(0xffB6DDE9);
+  static const Color footer =  const Color(0xffB6DDE9);
+  static const Color footerText =  const Color(0xff80a3ad);
+
+//#F6E2BF
+//#48130E
+}

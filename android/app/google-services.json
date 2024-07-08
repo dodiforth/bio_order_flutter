@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "599238218045",
+    "project_id": "product-order-9d38f",
+    "storage_bucket": "product-order-9d38f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599238218045:android:2ded30ae05fc8275987554",
+        "android_client_info": {
+          "package_name": "com.noyohelsinki.e_product_order_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599238218045-uv8abt4fu8gg6dia94qjoml2jb4ab24g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOmMSRd7vaD7Q7jbF5YdBBC_0DGNsjv6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599238218045-uv8abt4fu8gg6dia94qjoml2jb4ab24g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
