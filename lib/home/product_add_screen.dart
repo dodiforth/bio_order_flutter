@@ -8,18 +8,18 @@ class ProductAddScreen extends StatefulWidget {
 }
 
 class _ProductAddScreenState extends State<ProductAddScreen> {
+  final _formKey = GlobalKey<FormState>();
+  bool isSale = false;
+
+  // TEC = Text Editing Controller
+  TextEditingController titleTEC = TextEditingController();
+  TextEditingController descriptionTEC = TextEditingController();
+  TextEditingController priceTEC = TextEditingController();
+  TextEditingController stockTEC = TextEditingController();
+  TextEditingController salePercentTEC = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    bool isSale = true;
-
-    // TEC = Text Editing Controller
-    TextEditingController titleTEC = TextEditingController();
-    TextEditingController descriptionTEC = TextEditingController();
-    TextEditingController priceTEC = TextEditingController();
-    TextEditingController stockTEC = TextEditingController();
-    TextEditingController salePercentTEC = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -174,8 +174,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                           TextStyle(fontFamily: "DraftingMono", fontSize: 20),
                     ),
                     DropdownButton(
-                        isExpanded: true,
-                        items: [], onChanged: (s){}),
+                        isExpanded: true, items: [], onChanged: (s) {}),
                   ],
                 ),
               )
