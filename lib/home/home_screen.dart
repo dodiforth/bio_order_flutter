@@ -1,5 +1,6 @@
 import 'package:e_product_order_flutter/common/theme/custom_colors.dart';
 import 'package:e_product_order_flutter/home/cart_screen.dart';
+import 'package:e_product_order_flutter/home/product_add_screen.dart';
 import 'package:e_product_order_flutter/home/widgets/home_widget.dart';
 import 'package:e_product_order_flutter/home/widgets/seller_widget.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,13 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Icon(Icons.shopping_cart_outlined),
           ),
         1 => FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductAddScreen(),
+                ),
+              );
+            },
             child: const Icon(Icons.add),
           ),
         _ => Container(),

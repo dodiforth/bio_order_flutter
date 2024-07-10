@@ -63,7 +63,61 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                             PopupMenuButton(itemBuilder: (context) {
                               return [
-                                PopupMenuItem(child: Text("Review")),
+                                PopupMenuItem(
+                                  child: Text("Review"),
+                                  onTap: () {
+                                    int reviewScore = 0;
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        TextEditingController reviewTEC =
+                                            TextEditingController();
+                                        return StatefulBuilder(
+                                            builder: (context, setState) {
+                                          return AlertDialog(
+                                            title: Text("Review"),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                TextField(
+                                                  controller: reviewTEC,
+                                                ),
+                                                Row(
+                                                  children: List.generate(
+                                                    5,
+                                                    (index) => IconButton(
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          reviewScore = index;
+                                                        });
+                                                      },
+                                                      icon: Icon(Icons.star,
+                                                          color: index <=
+                                                                  reviewScore
+                                                              ? Colors
+                                                                  .amberAccent
+                                                              : Colors.grey),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .pop(),
+                                                  child: Text("Cancel")),
+                                              TextButton(
+                                                  onPressed: () {},
+                                                  child: Text("Submit")),
+                                            ],
+                                          );
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
                               ];
                             })
                           ],
@@ -93,8 +147,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     child: Column(
                       children: [
                         TabBar(tabs: [
-                          Tab(text: "Detail",),
-                          Tab(text: "Reviews",),
+                          Tab(
+                            text: "Detail",
+                          ),
+                          Tab(
+                            text: "Reviews",
+                          ),
                         ]),
                         Container(
                           height: 500,
@@ -123,7 +181,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: Center(
                 child: Text(
                   "Add to cart",
-                  style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
