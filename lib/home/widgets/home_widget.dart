@@ -1,5 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:e_product_order_flutter/common/theme/custom_colors.dart';
+import 'package:e_product_order_flutter/home/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -100,7 +101,27 @@ class _HomeWidgetState extends State<HomeWidget> {
                 ),
                 Container(
                   height: 240,
-                  color: CustomThemeColors.basicBackground,
+                  color: CustomThemeColors.contrastPrimary,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => ProductDetailScreen()),
+                          );
+                        },
+                        child: Container(
+                          width: 160,
+                          margin: EdgeInsets.only(right: 16),
+                          decoration: BoxDecoration(
+                              color: Colors.grey
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 )
               ],
             ),
