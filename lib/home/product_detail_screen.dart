@@ -116,6 +116,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
           ),
+          GestureDetector(
+            child: Container(
+              height: 72,
+              color: Colors.red[100],
+              child: Center(
+                child: Text(
+                  "Add to cart",
+                  style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

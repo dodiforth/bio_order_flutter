@@ -1,4 +1,5 @@
 import 'package:e_product_order_flutter/common/theme/custom_colors.dart';
+import 'package:e_product_order_flutter/home/cart_screen.dart';
 import 'package:e_product_order_flutter/home/widgets/home_widget.dart';
 import 'package:e_product_order_flutter/home/widgets/seller_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,11 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.logout),
             onPressed: () {},
           ),
-          if(_menuIndex == 0)
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
+          if (_menuIndex == 0)
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
+            ),
         ],
       ),
       body: IndexedStack(
@@ -40,15 +41,21 @@ class _HomeScreenState extends State<HomeScreen> {
           SellerWidget(),
         ],
       ),
-      floatingActionButton: switch(_menuIndex){
+      floatingActionButton: switch (_menuIndex) {
         0 => FloatingActionButton(
-          onPressed: (){},
-          child: const Icon(Icons.shopping_cart_outlined),
-        ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CartScreen(),
+                ),
+              );
+            },
+            child: const Icon(Icons.shopping_cart_outlined),
+          ),
         1 => FloatingActionButton(
-          onPressed: (){},
-          child: const Icon(Icons.add),
-        ),
+            onPressed: () {},
+            child: const Icon(Icons.add),
+          ),
         _ => Container(),
       },
       bottomNavigationBar: NavigationBar(
