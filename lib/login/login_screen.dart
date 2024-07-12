@@ -162,6 +162,18 @@ class _LoginScreenState extends State<LoginScreen> {
               InkWell(
                 onTap: () async {
                   final userCredit = await signInWithGoogle();
+
+                  if(userCredit == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Login failed"),
+                      ),
+                    );
+                    return;
+                  }
+                  if(context.mounted){
+                    context.go("/");
+                  }
                 },
                 child: Image.asset("assets/images/btn_google_signin.png"),
               ),
