@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../common/theme/custom_colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,6 +31,18 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<UserCredential?> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override
@@ -146,7 +159,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const Divider(),
-              Image.asset("assets/images/btn_google_signin.png"),
+              InkWell(
+                onTap: () async {
+                  final userCredit = await signInWithGoogle();
+                },
+                child: Image.asset("assets/images/btn_google_signin.png"),
+              ),
             ],
           ),
         ),
