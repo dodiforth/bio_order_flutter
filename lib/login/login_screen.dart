@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../common/theme/custom_colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -72,24 +73,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     )
                   ],
                 ),
-    ),
-    Padding(
-    padding: const EdgeInsets.only(top : 16),
-    child: MaterialButton(
-    onPressed: () {},
-    height: 48,
-    minWidth: double.infinity,
-    color: CustomThemeColors.primary,
-    child: const Text("Login", style: TextStyle(color: Colors.white, fontSize: 18,),),
-                ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top : 22),
+                padding: const EdgeInsets.only(top: 16),
                 child: MaterialButton(
                   onPressed: () {},
                   height: 48,
                   minWidth: double.infinity,
-                  child: const Text("Don't have an account? Sign Up", style: TextStyle(color: CustomThemeColors.footerText, fontSize: 15,),),
+                  color: CustomThemeColors.primary,
+                  child: const Text(
+                    "Login",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 22),
+                child: MaterialButton(
+                  onPressed: () => context.push("/sign_up"),
+                  height: 48,
+                  minWidth: double.infinity,
+                  child: const Text(
+                    "Don't have an account? Sign Up",
+                    style: TextStyle(
+                      color: CustomThemeColors.footerText,
+                      fontSize: 15,
+                    ),
+                  ),
                 ),
               ),
               const Divider(),
