@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_product_order_flutter/home/camera_vo.dart';
 import 'package:e_product_order_flutter/model/category.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,17 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           "Product Add",
         ),
         actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return CameraValueObject();
+                    },
+                  ),
+                );
+              },
+              icon: Icon(Icons.camera)),
           IconButton(onPressed: () {}, icon: Icon(Icons.batch_prediction)),
           IconButton(onPressed: () {}, icon: Icon(Icons.add)),
         ],
@@ -71,13 +83,18 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                         color: Colors.grey,
                       ),
                     ),
-                    child: imageData == null ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add),
-                        Text("Add product image"),
-                      ],
-                    ) : Image.memory(imageData!, fit: BoxFit.cover,),
+                    child: imageData == null
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add),
+                              Text("Add product image"),
+                            ],
+                          )
+                        : Image.memory(
+                            imageData!,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
               ),
