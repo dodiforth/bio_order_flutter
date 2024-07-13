@@ -22,7 +22,7 @@ void main() async{
   );
   if(kDebugMode) {
     try {
-      //await FirebaseAuth.instance.useAuthEmulator("localhost", 9099);
+      await FirebaseAuth.instance.useAuthEmulator("localhost", 9099); //구글로그인 하려면 비활성화
       FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8080);
       FirebaseStorage.instance.useStorageEmulator("localhost", 9199);
       

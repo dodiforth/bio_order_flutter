@@ -38,9 +38,9 @@ _$CartImpl _$$CartImplFromJson(Map<String, dynamic> json) => _$CartImpl(
       email: json['email'] as String?,
       timestamp: (json['timestamp'] as num?)?.toInt(),
       count: (json['count'] as num?)?.toInt(),
-      prodcut: json['prodcut'] == null
+      product: json['product'] == null
           ? null
-          : Prodcut.fromJson(json['prodcut'] as Map<String, dynamic>),
+          : Product.fromJson(json['product'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$CartImplToJson(_$CartImpl instance) =>
@@ -50,5 +50,5 @@ Map<String, dynamic> _$$CartImplToJson(_$CartImpl instance) =>
       'email': instance.email,
       'timestamp': instance.timestamp,
       'count': instance.count,
-      'prodcut': instance.prodcut,
+      'product': instance.product,
     };

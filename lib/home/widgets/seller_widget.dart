@@ -1,5 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_product_order_flutter/common/theme/custom_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:e_product_order_flutter/model/product.dart';
+
+Future addCategory(String title) async {
+  final db = FirebaseFirestore.instance;
+  final ref = db.collection("category");
+  await ref.add({"title": title});
+}
+
+Future<List<Product>> fetchProducts() async {
+  final db = FirebaseFirestore.instance;
+  final resp = await db.collection("products").orderBy("timestamp").get();
+  List<Product> items = [];
+  for (var doc in resp.docs) {
+    final item = Product.fromJson(doc.data());
+    final realItem = item.copyWith(docId: doc.id);
+    items.add(item);
+  }
+  return items;
+}
+
+Stream<QuerySnapshot> streamProducts(String query) {
+  final db = FirebaseFirestore.instance;
+  if (query.isNotEmpty) {
+    return db
+        .collection("products")
+        .orderBy("title")
+        .startAt([query]).endAt([query + "\uf8ff"]).snapshots();
+  }
+  return db.collection("products").orderBy("timestamp").snapshots();
+}
 
 class SellerWidget extends StatefulWidget {
   const SellerWidget({super.key});
@@ -9,6 +40,8 @@ class SellerWidget extends StatefulWidget {
 }
 
 class _SellerWidgetState extends State<SellerWidget> {
+  TextEditingController textEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,7 +50,15 @@ class _SellerWidgetState extends State<SellerWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SearchBar(),
+          SearchBar(
+            controller: textEditingController,
+            leading: Icon(Icons.search),
+            onChanged: (s) {
+              setState(() {});
+            },
+            hintText: "Search",
+            onTap: () {},
+          ),
           SizedBox(
             height: 16,
           ),
@@ -25,14 +66,55 @@ class _SellerWidgetState extends State<SellerWidget> {
             alignment: MainAxisAlignment.center,
             children: [
               ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.add),
-                label: Text("Add All Categories"),
+                onPressed: () async {
+                  List<String> categoryList = [
+                    "Grocery",
+                    "Fruits",
+                    "Vegetables",
+                    "Dairy",
+                    "Meat",
+                    "Seafood",
+                    "Bakery",
+                    "Snacks",
+                  ];
+                  final ref = FirebaseFirestore.instance.collection("category");
+                  final tmp = await ref.get();
+                  //
+                  for (var element in tmp.docs) {
+                    await element.reference.delete();
+                  } // -> 도큐먼트에 있는모든 카테거리 삭제 코드
+                  for (var element in categoryList) {
+                    await ref.add({"title": element});
+                  }
+                },
+                icon: const Icon(Icons.add),
+                label: const Text("Add All Categories"),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.add),
-                label: Text("Add Category"),
+                onPressed: () {
+                  TextEditingController tec = TextEditingController();
+                  showAdaptiveDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: TextField(
+                        controller: tec,
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            if (tec.text.isNotEmpty) {
+                              await addCategory(tec.text.trim());
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          child: Text("Add"),
+                        )
+                      ],
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.add),
+                label: const Text("Add Category"),
               ),
             ],
           ),
@@ -47,47 +129,102 @@ class _SellerWidgetState extends State<SellerWidget> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Container(
-                  height: 120,
-                  margin: EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 120,
-                        decoration: BoxDecoration(
-                            color: CustomThemeColors.footer,
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Product Name",style: TextStyle(fontFamily: "DraftingMono"),),
-                                  PopupMenuButton(itemBuilder: (context) => [
-                                    PopupMenuItem(child: Text("Edit")),
-                                    PopupMenuItem(child: Text("Delete")),
-                                  ])
-                                ],
-                              ),
-                              Text("€ 19,99"),
-                              Text("On Sale"),
-                              Text("In Stock",)
-                            ],
+            child: StreamBuilder(
+                stream: streamProducts(textEditingController.text),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final items = snapshot.data?.docs
+                        .map(
+                          (e) =>
+                              Product.fromJson(e.data() as Map<String, dynamic>)
+                                  .copyWith(docId: e.id),
+                        )
+                        .toList();
+                    return ListView.builder(
+                      itemCount: items?.length,
+                      itemBuilder: (context, index) {
+                        final item = items?[index];
+                        return GestureDetector(
+                          onTap: () {
+                            print(item?.docId.toString());
+                          },
+                          child: Container(
+                            height: 120,
+                            margin: EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                    color: CustomThemeColors.footer,
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                      image: NetworkImage(item?.imgUrl ??
+                                          "https://pixabay.com/photos/apple-fruit-wet-food-8591539/"),
+                                      // "pixabay.com" -> placeholder image link
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              item?.title ?? "Product Name",
+                                              style: TextStyle(
+                                                  fontFamily: "DraftingMono"),
+                                            ),
+                                            PopupMenuButton(
+                                                itemBuilder: (context) => [
+                                                      PopupMenuItem(
+                                                          child: Text("Edit")),
+                                                      PopupMenuItem(
+                                                        child: const Text(
+                                                            "Delete"),
+                                                        onTap: () async {
+                                                          await FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  "products")
+                                                              .doc(item?.docId)
+                                                              .delete();
+                                                        },
+                                                      ),
+                                                    ])
+                                          ],
+                                        ),
+                                        Text("${item?.price} €"),
+                                        Text(switch (item?.isSale) {
+                                          true => "On Sale",
+                                          false => "Not On Sale",
+                                          _ => "??",
+                                        }),
+                                        Text(
+                                          "In Stock : ${item?.stock}",
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                        );
+                      },
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }),
           ),
         ],
       ),

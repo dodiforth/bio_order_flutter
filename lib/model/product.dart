@@ -4,8 +4,8 @@ part 'product.freezed.dart';
 part 'product.g.dart';
 
 @freezed
-sealed class Prodcut with _$Prodcut {
-  factory Prodcut({
+sealed class Product with _$Product {
+  factory Product({
     String? docId,
     String? title,
     String? description,
@@ -17,7 +17,7 @@ sealed class Prodcut with _$Prodcut {
     int? timestamp,
   }) = _Product;
 
-  factory Prodcut.fromJson(Map<String, dynamic> json) => _$ProdcutFromJson(json);
+  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 }
 
 
@@ -29,7 +29,7 @@ sealed class Cart with _$Cart {
     String? email,
     int? timestamp,
     int? count,
-    Prodcut? prodcut,
+    Product? product,
   }) = _Cart;
 
   factory Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);

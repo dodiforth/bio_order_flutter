@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Prodcut _$ProdcutFromJson(Map<String, dynamic> json) {
+Product _$ProductFromJson(Map<String, dynamic> json) {
   return _Product.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Prodcut {
+mixin _$Product {
   String? get docId => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
@@ -32,13 +32,13 @@ mixin _$Prodcut {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ProdcutCopyWith<Prodcut> get copyWith => throw _privateConstructorUsedError;
+  $ProductCopyWith<Product> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProdcutCopyWith<$Res> {
-  factory $ProdcutCopyWith(Prodcut value, $Res Function(Prodcut) then) =
-      _$ProdcutCopyWithImpl<$Res, Prodcut>;
+abstract class $ProductCopyWith<$Res> {
+  factory $ProductCopyWith(Product value, $Res Function(Product) then) =
+      _$productCopyWithImpl<$Res, Product>;
   @useResult
   $Res call(
       {String? docId,
@@ -53,9 +53,9 @@ abstract class $ProdcutCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ProdcutCopyWithImpl<$Res, $Val extends Prodcut>
-    implements $ProdcutCopyWith<$Res> {
-  _$ProdcutCopyWithImpl(this._value, this._then);
+class _$productCopyWithImpl<$Res, $Val extends Product>
+    implements $ProductCopyWith<$Res> {
+  _$productCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -117,7 +117,7 @@ class _$ProdcutCopyWithImpl<$Res, $Val extends Prodcut>
 }
 
 /// @nodoc
-abstract class _$$ProductImplCopyWith<$Res> implements $ProdcutCopyWith<$Res> {
+abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
   factory _$$ProductImplCopyWith(
           _$ProductImpl value, $Res Function(_$ProductImpl) then) =
       __$$ProductImplCopyWithImpl<$Res>;
@@ -137,7 +137,7 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProdcutCopyWith<$Res> {
 
 /// @nodoc
 class __$$ProductImplCopyWithImpl<$Res>
-    extends _$ProdcutCopyWithImpl<$Res, _$ProductImpl>
+    extends _$productCopyWithImpl<$Res, _$ProductImpl>
     implements _$$ProductImplCopyWith<$Res> {
   __$$ProductImplCopyWithImpl(
       _$ProductImpl _value, $Res Function(_$ProductImpl) _then)
@@ -235,7 +235,7 @@ class _$ProductImpl implements _Product {
 
   @override
   String toString() {
-    return 'Prodcut(docId: $docId, title: $title, description: $description, price: $price, isSale: $isSale, stock: $stock, saleRate: $saleRate, imgUrl: $imgUrl, timestamp: $timestamp)';
+    return 'product(docId: $docId, title: $title, description: $description, price: $price, isSale: $isSale, stock: $stock, saleRate: $saleRate, imgUrl: $imgUrl, timestamp: $timestamp)';
   }
 
   @override
@@ -276,7 +276,7 @@ class _$ProductImpl implements _Product {
   }
 }
 
-abstract class _Product implements Prodcut {
+abstract class _Product implements Product {
   factory _Product(
       {final String? docId,
       final String? title,
@@ -325,7 +325,7 @@ mixin _$Cart {
   String? get email => throw _privateConstructorUsedError;
   int? get timestamp => throw _privateConstructorUsedError;
   int? get count => throw _privateConstructorUsedError;
-  Prodcut? get prodcut => throw _privateConstructorUsedError;
+  Product? get product => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -343,9 +343,9 @@ abstract class $CartCopyWith<$Res> {
       String? email,
       int? timestamp,
       int? count,
-      Prodcut? prodcut});
+      Product? product});
 
-  $ProdcutCopyWith<$Res>? get prodcut;
+  $ProductCopyWith<$Res>? get product;
 }
 
 /// @nodoc
@@ -366,7 +366,7 @@ class _$CartCopyWithImpl<$Res, $Val extends Cart>
     Object? email = freezed,
     Object? timestamp = freezed,
     Object? count = freezed,
-    Object? prodcut = freezed,
+    Object? product = freezed,
   }) {
     return _then(_value.copyWith(
       cartDocId: freezed == cartDocId
@@ -389,22 +389,22 @@ class _$CartCopyWithImpl<$Res, $Val extends Cart>
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int?,
-      prodcut: freezed == prodcut
-          ? _value.prodcut
-          : prodcut // ignore: cast_nullable_to_non_nullable
-              as Prodcut?,
+      product: freezed == product
+          ? _value.product
+          : product // ignore: cast_nullable_to_non_nullable
+              as Product?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $ProdcutCopyWith<$Res>? get prodcut {
-    if (_value.prodcut == null) {
+  $ProductCopyWith<$Res>? get product {
+    if (_value.product == null) {
       return null;
     }
 
-    return $ProdcutCopyWith<$Res>(_value.prodcut!, (value) {
-      return _then(_value.copyWith(prodcut: value) as $Val);
+    return $ProductCopyWith<$Res>(_value.product!, (value) {
+      return _then(_value.copyWith(product: value) as $Val);
     });
   }
 }
@@ -422,10 +422,10 @@ abstract class _$$CartImplCopyWith<$Res> implements $CartCopyWith<$Res> {
       String? email,
       int? timestamp,
       int? count,
-      Prodcut? prodcut});
+      Product? product});
 
   @override
-  $ProdcutCopyWith<$Res>? get prodcut;
+  $ProductCopyWith<$Res>? get product;
 }
 
 /// @nodoc
@@ -443,7 +443,7 @@ class __$$CartImplCopyWithImpl<$Res>
     Object? email = freezed,
     Object? timestamp = freezed,
     Object? count = freezed,
-    Object? prodcut = freezed,
+    Object? product = freezed,
   }) {
     return _then(_$CartImpl(
       cartDocId: freezed == cartDocId
@@ -466,10 +466,10 @@ class __$$CartImplCopyWithImpl<$Res>
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int?,
-      prodcut: freezed == prodcut
-          ? _value.prodcut
-          : prodcut // ignore: cast_nullable_to_non_nullable
-              as Prodcut?,
+      product: freezed == product
+          ? _value.product
+          : product // ignore: cast_nullable_to_non_nullable
+              as Product?,
     ));
   }
 }
@@ -483,7 +483,7 @@ class _$CartImpl implements _Cart {
       this.email,
       this.timestamp,
       this.count,
-      this.prodcut});
+      this.product});
 
   factory _$CartImpl.fromJson(Map<String, dynamic> json) =>
       _$$CartImplFromJson(json);
@@ -499,11 +499,11 @@ class _$CartImpl implements _Cart {
   @override
   final int? count;
   @override
-  final Prodcut? prodcut;
+  final Product? product;
 
   @override
   String toString() {
-    return 'Cart(cartDocId: $cartDocId, uid: $uid, email: $email, timestamp: $timestamp, count: $count, prodcut: $prodcut)';
+    return 'Cart(cartDocId: $cartDocId, uid: $uid, email: $email, timestamp: $timestamp, count: $count, product: $product)';
   }
 
   @override
@@ -518,13 +518,13 @@ class _$CartImpl implements _Cart {
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
             (identical(other.count, count) || other.count == count) &&
-            (identical(other.prodcut, prodcut) || other.prodcut == prodcut));
+            (identical(other.product, product) || other.product == product));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, cartDocId, uid, email, timestamp, count, prodcut);
+      runtimeType, cartDocId, uid, email, timestamp, count, product);
 
   @JsonKey(ignore: true)
   @override
@@ -547,7 +547,7 @@ abstract class _Cart implements Cart {
       final String? email,
       final int? timestamp,
       final int? count,
-      final Prodcut? prodcut}) = _$CartImpl;
+      final Product? product}) = _$CartImpl;
 
   factory _Cart.fromJson(Map<String, dynamic> json) = _$CartImpl.fromJson;
 
@@ -562,7 +562,7 @@ abstract class _Cart implements Cart {
   @override
   int? get count;
   @override
-  Prodcut? get prodcut;
+  Product? get product;
   @override
   @JsonKey(ignore: true)
   _$$CartImplCopyWith<_$CartImpl> get copyWith =>
