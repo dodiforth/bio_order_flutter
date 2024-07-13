@@ -34,6 +34,30 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
   TextEditingController stockTEC = TextEditingController();
   TextEditingController salePercentTEC = TextEditingController();
 
+  List<Category> categoryItems = [];
+
+  Future<List<Category>> _fetchCategories() async {
+    final resp = await db.collection("category").get();
+    for (var doc in resp.docs) {
+      categoryItems.add(
+        Category(
+          docId: doc.id,
+          title: doc.data()["title"],
+        ),
+      );
+    }
+    setState(() {
+      selectedCategory = categoryItems.first;
+    });
+    return categoryItems;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCategories();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -214,8 +238,27 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                       style:
                           TextStyle(fontFamily: "DraftingMono", fontSize: 20),
                     ),
-                    DropdownButton(
-                        isExpanded: true, items: [], onChanged: (s) {}),
+                    categoryItems.isNotEmpty
+                        ? DropdownButton<Category>(
+                            isExpanded: true,
+                            value: selectedCategory,
+                            items: categoryItems
+                                .map(
+                                  (e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text("${e.title}"),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (s) {
+                              setState(() {
+                                selectedCategory = s;
+                              });
+                            },
+                          )
+                        : Center(
+                            child: CircularProgressIndicator(),
+                          ),
                   ],
                 ),
               )
