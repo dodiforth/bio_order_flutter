@@ -42,6 +42,21 @@ class SellerWidget extends StatefulWidget {
 class _SellerWidgetState extends State<SellerWidget> {
   TextEditingController textEditingController = TextEditingController();
 
+  update(Product? item) async {
+    final db = FirebaseFirestore.instance;
+    final ref = db.collection("products");
+    await ref.doc(item?.docId).update(
+          item!
+              .copyWith(
+                title: "Updated Title mk4",
+                price: 99,
+                stock: 99,
+                isSale: false,
+              )
+              .toJson(),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -183,22 +198,23 @@ class _SellerWidgetState extends State<SellerWidget> {
                                                   fontFamily: "DraftingMono"),
                                             ),
                                             PopupMenuButton(
-                                                itemBuilder: (context) => [
-                                                      PopupMenuItem(
-                                                          child: Text("Edit")),
-                                                      PopupMenuItem(
-                                                        child: const Text(
-                                                            "Delete"),
-                                                        onTap: () async {
-                                                          await FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  "products")
-                                                              .doc(item?.docId)
-                                                              .delete();
-                                                        },
-                                                      ),
-                                                    ])
+                                              itemBuilder: (context) => [
+                                                PopupMenuItem(
+                                                  child: const Text("Edit"),
+                                                  onTap: () => update(item),
+                                                ),
+                                                PopupMenuItem(
+                                                  child: const Text("Delete"),
+                                                  onTap: () async {
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection("products")
+                                                        .doc(item?.docId)
+                                                        .delete();
+                                                  },
+                                                ),
+                                              ],
+                                            )
                                           ],
                                         ),
                                         Text("${item?.price} €"),
