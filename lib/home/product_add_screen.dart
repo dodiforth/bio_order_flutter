@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_product_order_flutter/home/camera_vo.dart';
 import 'package:e_product_order_flutter/model/category.dart';
+import 'package:e_product_order_flutter/model/product.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -52,6 +53,72 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
     return categoryItems;
   }
 
+  Future<Uint8List> imageCompressList(Uint8List list) async {
+    var result = await FlutterImageCompress.compressWithList(
+      list,
+      minHeight: 300,
+      minWidth: 300,
+      quality: 50,
+    );
+    return result;
+  }
+
+  Future addProduct() async {
+    if (imageData != null) {
+      final storageRef = storage.ref().child(
+          "${DateTime.now().millisecondsSinceEpoch}_${image?.name ?? "???"}.jpg");
+      final compressedImageData = await imageCompressList(imageData!);
+      await storageRef.putData(compressedImageData!);
+      final downloadLink = await storageRef.getDownloadURL();
+      final sampleData = Product(
+        title: titleTEC.text,
+        description: descriptionTEC.text,
+        price: int.parse(priceTEC.text),
+        stock: int.parse(stockTEC.text),
+        isSale: isSale,
+        saleRate: salePercentTEC.text.isNotEmpty
+            ? double.parse(salePercentTEC.text)
+            : 0,
+        imgUrl: downloadLink,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+      );
+      final doc = await db.collection("products").add(sampleData.toJson());
+      await doc.collection("category").add(selectedCategory?.toJson() ?? {});
+      final categoRef = db.collection("category").doc(selectedCategory?.docId);
+      await categoRef.collection("products").add({"docId": doc.id});
+    }
+  }
+
+  Future addProducts() async {
+    if (imageData != null) {
+      final storageRef = storage.ref().child(
+          "${DateTime.now().millisecondsSinceEpoch}_${image?.name ?? "???"}.jpg");
+      final compressedImageData = await imageCompressList(imageData!);
+      await storageRef.putData(compressedImageData!);
+      final downloadLink = await storageRef.getDownloadURL();
+
+      for(var i = 0; i < 10; i++) {
+        final sampleData = Product(
+          title: "${titleTEC.text}$i",
+          description: descriptionTEC.text,
+          price: int.parse(priceTEC.text),
+          stock: int.parse(stockTEC.text),
+          isSale: isSale,
+          saleRate: salePercentTEC.text.isNotEmpty
+              ? double.parse(salePercentTEC.text)
+              : 0,
+          imgUrl: downloadLink,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+        );
+        final doc = await db.collection("products").add(sampleData.toJson());
+        await doc.collection("category").add(selectedCategory?.toJson() ?? {});
+        final categoRef = db.collection("category").doc(selectedCategory?.docId);
+        await categoRef.collection("products").add({"docId": doc.id});
+      }
+
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,14 +138,21 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return CameraValueObject();
+                      return const CameraValueObject();
                     },
                   ),
                 );
               },
-              icon: Icon(Icons.camera)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.batch_prediction)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.add)),
+              icon: const Icon(Icons.camera)),
+          IconButton(
+              onPressed: () {
+                addProducts();
+              }, icon: const Icon(Icons.batch_prediction)),
+          IconButton(
+              onPressed: () {
+                addProduct();
+              },
+              icon: const Icon(Icons.add)),
         ],
       ),
       body: SingleChildScrollView(
@@ -193,7 +267,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     TextFormField(
                       controller: stockTEC,
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "Stock",
                         hintText: "Type product\'s stock",
@@ -220,7 +294,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     if (isSale)
                       TextFormField(
                         controller: salePercentTEC,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Sale\'s Percent",
                           hintText: "Type product\'s sale percent",
