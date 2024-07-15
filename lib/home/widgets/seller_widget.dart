@@ -57,6 +57,27 @@ class _SellerWidgetState extends State<SellerWidget> {
         );
   }
 
+  delete(Product? item) async {
+    final db = FirebaseFirestore.instance;
+    await db.collection("products").doc(item?.docId).delete();
+    final productCategory = await db
+        .collection("products")
+        .doc(item?.docId)
+        .collection("category")
+        .get();
+    final foo = productCategory.docs.first;
+    final categoryId = foo.data()["docId"];
+    final bar = await db
+        .collection("category")
+        .doc(categoryId)
+        .collection("products")
+        .where("docId", isEqualTo: item?.docId)
+        .get();
+    bar.docs.forEach((element) {
+      element.reference.delete();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -194,7 +215,7 @@ class _SellerWidgetState extends State<SellerWidget> {
                                           children: [
                                             Text(
                                               item?.title ?? "Product Name",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily: "DraftingMono"),
                                             ),
                                             PopupMenuButton(
@@ -205,13 +226,7 @@ class _SellerWidgetState extends State<SellerWidget> {
                                                 ),
                                                 PopupMenuItem(
                                                   child: const Text("Delete"),
-                                                  onTap: () async {
-                                                    await FirebaseFirestore
-                                                        .instance
-                                                        .collection("products")
-                                                        .doc(item?.docId)
-                                                        .delete();
-                                                  },
+                                                  onTap: () => delete(item),
                                                 ),
                                               ],
                                             )
@@ -237,7 +252,7 @@ class _SellerWidgetState extends State<SellerWidget> {
                       },
                     );
                   }
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }),
