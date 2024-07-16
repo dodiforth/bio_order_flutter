@@ -56,7 +56,6 @@ class _SellerWidgetState extends State<SellerWidget> {
               .toJson(),
         );
   }
-
   delete(Product? item) async {
     final db = FirebaseFirestore.instance;
     await db.collection("products").doc(item?.docId).delete();
