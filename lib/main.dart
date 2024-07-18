@@ -6,6 +6,7 @@ import 'package:e_product_order_flutter/home/product_add_screen.dart';
 import 'package:e_product_order_flutter/home/product_detail_screen.dart';
 import 'package:e_product_order_flutter/login/login_screen.dart';
 import 'package:e_product_order_flutter/login/signup_screen.dart';
+import 'package:e_product_order_flutter/model/product.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -55,7 +56,9 @@ class BioOrderApp extends StatelessWidget {
           ),
           GoRoute(
             path: "product",
-            builder: (context, state) => ProductDetailScreen(),
+            builder: (context, state) {
+              return ProductDetailScreen(product: state.extra as Product,);
+            },
           ),
           GoRoute(
             path: "product/add",

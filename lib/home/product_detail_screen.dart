@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../model/product.dart';
+
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({super.key});
+  final Product product;
+
+  const ProductDetailScreen({super.key, required this.product});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -12,7 +16,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Product Detail"),
+        title: Text("${widget.product.title}"),
       ),
       body: Column(
         children: [
@@ -26,24 +30,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.orange,
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          widget.product.imgUrl ?? "",
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     child: Center(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
-                            child: Text(
-                              "On Sale",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          )
+                          switch (widget.product.isSale) {
+                            true => Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 12),
+                                child: Text(
+                                  "On Sale",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            _ => Container(),
+                          }
                         ],
                       ),
                     ),
@@ -57,7 +70,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Product name",
+                              widget.product.title ?? "Empty Name",
                               style: TextStyle(
                                   fontSize: 24, fontWeight: FontWeight.w700),
                             ),
@@ -123,11 +136,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ],
                         ),
                         Text("Product infos"),
-                        Text("info info info info info info info info info"),
+                        Text("${widget.product.description}"),
                         Row(
                           children: [
                             Text(
-                              "€ 49,99",
+                              "${widget.product.price} €",
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w700),
                             ),

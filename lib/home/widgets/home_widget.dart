@@ -3,6 +3,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:e_product_order_flutter/common/theme/custom_colors.dart';
 import 'package:e_product_order_flutter/home/product_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../model/category.dart';
 import '../../model/product.dart';
@@ -183,11 +184,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                             final item = items[index];
                             return GestureDetector(
                               onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProductDetailScreen()),
-                                );
+                                context.go("/product", extra: item);
                               },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
