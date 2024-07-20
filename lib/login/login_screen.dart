@@ -1,6 +1,8 @@
+import 'package:e_product_order_flutter/login/provider/login_provider.dart';
 import 'package:e_product_order_flutter/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../common/theme/custom_colors.dart';
@@ -22,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       print(credential);
-      userCredential = credential;
+      //userCredential = credential;
       return credential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -109,40 +111,44 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
-                child: MaterialButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      final result = await signIn(
-                          emailTextController.text.trim(),
-                          pwdTextController.text.trim());
-                      if (result == null) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Login failed"),
-                            ),
-                          );
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    return MaterialButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          final result = await signIn(
+                              emailTextController.text.trim(),
+                              pwdTextController.text.trim());
+                          if (result == null) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Login failed"),
+                                ),
+                              );
+                            }
+                            return;
+                          }
+                          ref.watch(userCredentialProvider.notifier).state = result;
+                          // login and auth validation success
+                          if (context.mounted) {
+                            context.go("/");
+                          }
                         }
-
-                        return;
-                      }
-                      // login and auth validation success
-                      if (context.mounted) {
-                        context.go("/");
-                      }
-                    }
-                  },
-                  height: 48,
-                  minWidth: double.infinity,
-                  color: CustomThemeColors.primary,
-                  child: const Text(
-                    "Login",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
+                      },
+                      height: 48,
+                      minWidth: double.infinity,
+                      color: CustomThemeColors.primary,
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                    );
+                  }
                 ),
               ),
               Padding(

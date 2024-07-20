@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'firebase_options.dart';
 
@@ -36,7 +37,7 @@ void main() async{
       print(e);
     }
   }
-  runApp(BioOrderApp());
+  runApp(ProviderScope(child: BioOrderApp()));
 }
 
 class BioOrderApp extends StatelessWidget {
