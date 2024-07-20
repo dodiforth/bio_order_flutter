@@ -3,7 +3,9 @@ import 'package:e_product_order_flutter/home/cart_screen.dart';
 import 'package:e_product_order_flutter/home/product_add_screen.dart';
 import 'package:e_product_order_flutter/home/widgets/home_widget.dart';
 import 'package:e_product_order_flutter/home/widgets/seller_widget.dart';
+import 'package:e_product_order_flutter/main.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -45,11 +47,14 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: switch (_menuIndex) {
         0 => FloatingActionButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CartScreen(uid: "",),
-                ),
-              );
+              final uid = userCredential?.user?.uid;
+              if(uid == null) return;
+              context.go("/cart/$uid");
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (context) => CartScreen(uid: "",),
+              //   ),
+              // );
             },
             child: const Icon(Icons.shopping_cart_outlined),
           ),

@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_product_order_flutter/model/product.dart';
 import 'package:flutter/material.dart';
 
 class CartScreen extends StatefulWidget {
   final String uid;
+
   const CartScreen({super.key, required this.uid});
 
   @override
@@ -9,6 +12,14 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamCartItems() {
+    return FirebaseFirestore.instance
+        .collection("cart")
+        .where("uid", isEqualTo: widget.uid)
+        .orderBy("timestamp")
+        .snapshots();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,63 +29,114 @@ class _CartScreenState extends State<CartScreen> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.separated(
-              itemBuilder: (context, index) {
-                return Container(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 120,
-                          width: 120,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Product Name"),
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.delete))
-                                ],
-                              ),
-                              Text("€ Product Price"),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.remove_circle_outline),
+            child: StreamBuilder(
+                stream: streamCartItems(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<Cart> items = snapshot.data?.docs.map((e) {
+                          final foo = Cart.fromJson(e.data());
+                          return foo.copyWith(cartDocId: e.id);
+                        }).toList() ??
+                        [];
+                    return ListView.separated(
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        final item = items[index];
+                        num price = (item.product?.isSale ?? false)
+                            ? ((item.product!.price! *
+                                    (item.product!.saleRate! / 100)) *
+                                (item.count ?? 1))
+                            : (item.product!.price! * (item.count ?? 1));
+                        return Container(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 120,
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        item.product?.imgUrl ?? "",
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                  Text("32"),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.add_circle_outline),
+                                ),
+                                Expanded(
+                                    child: Padding(
+                                  padding: const EdgeInsets.only(left: 16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(item.product?.title ??
+                                              "Product Name"),
+                                          IconButton(
+                                              onPressed: () {},
+                                              icon: Icon(Icons.delete))
+                                        ],
+                                      ),
+                                      Text("${price.toStringAsFixed(2)}€"),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              int count = item.count ?? 1;
+                                              count--;
+                                              if (count <= 1) {
+                                                count = 1;
+                                              }
+                                              FirebaseFirestore.instance
+                                                  .collection("cart")
+                                                  .doc("${item.cartDocId}")
+                                                  .update({"count": count});
+                                            },
+                                            icon: Icon(
+                                                Icons.remove_circle_outline),
+                                          ),
+                                          Text("${item.count}"),
+                                          IconButton(
+                                            onPressed: () {
+                                              int count = item.count ?? 1;
+                                              count++;
+                                              if (count >= 99) {
+                                                count = 99;
+                                              }
+                                              FirebaseFirestore.instance
+                                                  .collection("cart")
+                                                  .doc("${item.cartDocId}")
+                                                  .update({"count": count});
+                                            },
+                                            icon:
+                                                Icon(Icons.add_circle_outline),
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                ],
-                              )
-                            ],
+                                ))
+                              ],
+                            ),
                           ),
-                        ))
-                      ],
-                    ),
-                  ),
-                );
-              },
-              separatorBuilder: (context, _) => Divider(),
-              itemCount: 10,
-            ),
+                        );
+                      },
+                      separatorBuilder: (context, _) => Divider(),
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }),
           ),
           Divider(),
           Container(
