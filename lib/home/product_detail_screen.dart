@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_product_order_flutter/main.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product.dart';
@@ -188,6 +190,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ),
           GestureDetector(
+            onTap: () async {
+              final db = FirebaseFirestore.instance;
+              final duplicatedItems = await db
+                  .collection("cart")
+                  .where("uid", isEqualTo: userCredential?.user?.uid ?? "")
+                  .where("product.docId", isEqualTo: widget.product.docId)
+                  .get();
+              if (duplicatedItems.docs.isNotEmpty) {
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: Text("Already in cart"),
+                    ),
+                  );
+                }
+                return;
+              }
+              // add to cart
+              await db.collection("cart").add({
+                "uid" : userCredential?.user?.uid ?? "",
+                "email" : userCredential?.user?.email ?? "",
+                "timestamp" : DateTime.now().millisecondsSinceEpoch,
+                "product" : widget.product.toJson(),
+                "count" : 1
+              },);
+              if(context.mounted){
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: Text("Added to cart"),
+                  ),
+                );
+              }
+            },
             child: Container(
               height: 72,
               color: Colors.red[100],

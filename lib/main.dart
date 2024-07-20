@@ -16,6 +16,7 @@ import 'package:go_router/go_router.dart';
 import 'firebase_options.dart';
 
 List<CameraDescription> cameras = [];
+UserCredential? userCredential;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ void main() async{
   if(kDebugMode) {
     try {
       await FirebaseAuth.instance.useAuthEmulator("localhost", 9099); //구글로그인 하려면 비활성화
-      FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8080);
+      FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8081);
       FirebaseStorage.instance.useStorageEmulator("localhost", 9199);
       
     } catch (e) {
