@@ -80,7 +80,14 @@ class _CartScreenState extends State<CartScreen> {
                                           Text(item.product?.title ??
                                               "Product Name"),
                                           IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                final db = FirebaseFirestore.instance;
+                                                final ref = db.collection("cart")
+                                                .doc("${item.cartDocId}");
+                                                ref.get().then((value) {
+                                                  value.reference.delete();
+                                                });
+                                              },
                                               icon: Icon(Icons.delete))
                                         ],
                                       ),
@@ -138,20 +145,46 @@ class _CartScreenState extends State<CartScreen> {
                   );
                 }),
           ),
-          Divider(),
+          const Divider(),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Total:",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-                Text(
-                  "€ 300.00",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                ),
+                StreamBuilder(
+                    stream: streamCartItems(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<Cart> items = snapshot.data?.docs.map((e) {
+                              final foo = Cart.fromJson(e.data());
+                              return foo.copyWith(cartDocId: e.id);
+                            }).toList() ??
+                            []; //=> 카트에 있는 아이템들은 일단 다 가져왔다.
+                        double totalPrice = 0;
+                        for (var element in items) {
+                          if (element.product?.isSale ?? false) {
+                            totalPrice += ((element.product!.price! *
+                                    (element.product!.saleRate! / 100)) *
+                                (element.count ?? 1));
+                          } else {
+                            totalPrice += (element.product!.price! *
+                                (element.count ?? 1));
+                          }
+                        }
+                        return Text(
+                          "€ ${totalPrice.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 24),
+                        );
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }),
               ],
             ),
           ),
