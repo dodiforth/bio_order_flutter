@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_product_order_flutter/login/provider/login_provider.dart';
 import 'package:e_product_order_flutter/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/product.dart';
 
@@ -84,6 +86,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     int reviewScore = 0;
                                     showDialog(
                                       context: context,
+                                      barrierDismissible: false,
                                       builder: (context) {
                                         TextEditingController reviewTEC =
                                             TextEditingController();
@@ -123,9 +126,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                       Navigator.of(context)
                                                           .pop(),
                                                   child: Text("Cancel")),
-                                              TextButton(
-                                                  onPressed: () {},
-                                                  child: Text("Submit")),
+                                              Consumer(builder:
+                                                  (context, ref, child) {
+                                                final user = ref.watch(
+                                                    userCredentialProvider);
+                                                return TextButton(
+                                                    onPressed: () async {
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              "products")
+                                                          .doc(
+                                                              "${widget.product.docId}")
+                                                          .collection("reviews")
+                                                          .add(
+                                                        {
+                                                          "uid":
+                                                              user?.user?.uid ??
+                                                                  "",
+                                                          "email": user?.user
+                                                                  ?.email ??
+                                                              "",
+                                                          "review": reviewTEC
+                                                              .text
+                                                              .trim(),
+                                                          "timestamp":
+                                                              Timestamp.now(),
+                                                          "score":
+                                                              reviewScore + 1,
+                                                        },
+                                                      );
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Text("Submit"));
+                                              }),
                                             ],
                                           );
                                         });
@@ -176,9 +211,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               Container(
                                 child: Text("Product detail"),
                               ),
-                              Container(
-                                child: Text("Reviews"),
-                              ),
+                              StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection("products")
+                                      .doc("${widget.product.docId}")
+                                      .collection("reviews")
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      final items = snapshot.data?.docs ?? [];
+                                      return ListView.separated(
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              title: Text("${items[index].data()["review"]}"),
+                                            );
+                                          },
+                                          separatorBuilder: (_, __) =>
+                                              Divider(),
+                                          itemCount: items.length);
+                                    }
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }),
                             ],
                           ),
                         )
@@ -209,14 +264,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 return;
               }
               // add to cart
-              await db.collection("cart").add({
-                "uid" : userCredential?.user?.uid ?? "",
-                "email" : userCredential?.user?.email ?? "",
-                "timestamp" : DateTime.now().millisecondsSinceEpoch,
-                "product" : widget.product.toJson(),
-                "count" : 1
-              },);
-              if(context.mounted){
+              await db.collection("cart").add(
+                {
+                  "uid": userCredential?.user?.uid ?? "",
+                  "email": userCredential?.user?.email ?? "",
+                  "timestamp": DateTime.now().millisecondsSinceEpoch,
+                  "product": widget.product.toJson(),
+                  "count": 1
+                },
+              );
+              if (context.mounted) {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
